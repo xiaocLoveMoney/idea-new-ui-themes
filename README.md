@@ -1,3 +1,5 @@
+<img src="assets/icon.png" width="96" alt="">
+
 # IntelliJ New UI Themes for Orca
 
 The look of IntelliJ IDEA's New UI, ported to [Orca](https://github.com/stablyai/orca):
@@ -42,6 +44,8 @@ icon ships only in commercial IDEs (Go, Rust, Ruby…) show the generic file ico
 `src/icon-mapping.json`.
 
 ## Develop
+
+The plugin icon is drawn by hand in `assets/icon.svg`; `assets/icon.png` is its 512×512 render.
 
 The theme files under `themes/`, `terminal/` and `icons/*.json` are generated; edit `src/` instead.
 

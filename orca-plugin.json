@@ -2,7 +2,7 @@
   "manifestVersion": 2,
   "id": "idea-new-ui-themes",
   "name": "IntelliJ New UI Themes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "IntelliJ IDEA New UI and Islands colors for Orca: app themes, code highlighting, terminal palettes, New UI file icons and JetBrains Mono.",
   "license": "MIT AND Apache-2.0 AND OFL-1.1",
   "repository": "https://github.com/xiaocLoveMoney/idea-new-ui-themes",
@@ -10,6 +10,7 @@
     "name": "xiaocLoveMoney",
     "url": "https://github.com/xiaocLoveMoney"
   },
+  "icon": "assets/icon.png",
   "engines": {
     "orca": ">=1.4.253"
   },
