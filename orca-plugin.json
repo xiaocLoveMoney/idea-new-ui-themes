@@ -5,35 +5,96 @@
   "version": "1.0.0",
   "description": "IntelliJ IDEA New UI and Islands colors for Orca: app themes, code highlighting, terminal palettes, New UI file icons and JetBrains Mono.",
   "license": "MIT AND Apache-2.0 AND OFL-1.1",
+  "repository": "https://github.com/xiaocLoveMoney/idea-new-ui-themes",
+  "author": {
+    "name": "xiaocLoveMoney",
+    "url": "https://github.com/xiaocLoveMoney"
+  },
   "engines": {
     "orca": ">=1.4.253"
   },
   "execution": "data",
   "contributes": {
     "themes": [
-      { "id": "new-ui-dark", "title": "IntelliJ New UI Dark", "path": "themes/new-ui-dark.json" },
-      { "id": "new-ui-light", "title": "IntelliJ New UI Light", "path": "themes/new-ui-light.json" },
-      { "id": "islands-dark", "title": "IntelliJ Islands Dark", "path": "themes/islands-dark.json" },
-      { "id": "islands-light", "title": "IntelliJ Islands Light", "path": "themes/islands-light.json" }
+      {
+        "id": "new-ui-dark",
+        "title": "IntelliJ New UI Dark",
+        "path": "themes/new-ui-dark.json"
+      },
+      {
+        "id": "new-ui-light",
+        "title": "IntelliJ New UI Light",
+        "path": "themes/new-ui-light.json"
+      },
+      {
+        "id": "islands-dark",
+        "title": "IntelliJ Islands Dark",
+        "path": "themes/islands-dark.json"
+      },
+      {
+        "id": "islands-light",
+        "title": "IntelliJ Islands Light",
+        "path": "themes/islands-light.json"
+      }
     ],
     "terminalThemes": [
-      { "id": "new-ui-dark", "title": "IntelliJ New UI Dark", "path": "terminal/new-ui-dark.json" },
-      { "id": "new-ui-light", "title": "IntelliJ New UI Light", "path": "terminal/new-ui-light.json" },
-      { "id": "islands-dark", "title": "IntelliJ Islands Dark", "path": "terminal/islands-dark.json" },
-      { "id": "islands-light", "title": "IntelliJ Islands Light", "path": "terminal/islands-light.json" }
+      {
+        "id": "new-ui-dark",
+        "title": "IntelliJ New UI Dark",
+        "path": "terminal/new-ui-dark.json"
+      },
+      {
+        "id": "new-ui-light",
+        "title": "IntelliJ New UI Light",
+        "path": "terminal/new-ui-light.json"
+      },
+      {
+        "id": "islands-dark",
+        "title": "IntelliJ Islands Dark",
+        "path": "terminal/islands-dark.json"
+      },
+      {
+        "id": "islands-light",
+        "title": "IntelliJ Islands Light",
+        "path": "terminal/islands-light.json"
+      }
     ],
     "iconThemes": [
-      { "id": "intellij-dark", "title": "IntelliJ New UI Icons (Dark)", "path": "icons/intellij-dark.json" },
-      { "id": "intellij-light", "title": "IntelliJ New UI Icons (Light)", "path": "icons/intellij-light.json" }
+      {
+        "id": "intellij-dark",
+        "title": "IntelliJ New UI Icons (Dark)",
+        "path": "icons/intellij-dark.json"
+      },
+      {
+        "id": "intellij-light",
+        "title": "IntelliJ New UI Icons (Light)",
+        "path": "icons/intellij-light.json"
+      }
     ],
     "fonts": [
       {
         "family": "JetBrains Mono",
         "faces": [
-          { "path": "fonts/JetBrainsMono-Regular.woff2", "weight": "400", "style": "normal" },
-          { "path": "fonts/JetBrainsMono-Italic.woff2", "weight": "400", "style": "italic" },
-          { "path": "fonts/JetBrainsMono-Bold.woff2", "weight": "700", "style": "normal" },
-          { "path": "fonts/JetBrainsMono-BoldItalic.woff2", "weight": "700", "style": "italic" }
+          {
+            "path": "fonts/JetBrainsMono-Regular.woff2",
+            "weight": "400",
+            "style": "normal"
+          },
+          {
+            "path": "fonts/JetBrainsMono-Italic.woff2",
+            "weight": "400",
+            "style": "italic"
+          },
+          {
+            "path": "fonts/JetBrainsMono-Bold.woff2",
+            "weight": "700",
+            "style": "normal"
+          },
+          {
+            "path": "fonts/JetBrainsMono-BoldItalic.woff2",
+            "weight": "700",
+            "style": "italic"
+          }
         ]
       }
     ]

@@ -17,7 +17,7 @@ Islands' colors (dark islands in a lighter frame, blue tab pills), not its round
 ## Install
 
 ```sh
-orca plugin install <owner>/idea-new-ui-themes
+orca plugin install xiaocLoveMoney/idea-new-ui-themes
 ```
 
 Or Settings → Plugins → install from Git with the repository URL. The plugin is content only
