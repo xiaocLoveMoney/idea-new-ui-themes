@@ -16,6 +16,7 @@ import { SYNTAX_SCOPES, type SyntaxRole } from './syntax-scopes.ts';
 export const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
 const PALETTE_DIR = join(ROOT, 'src', 'palettes');
 const ICON_MAPPING_FILE = join(ROOT, 'src', 'icon-mapping.json');
+const SYMBOLS_MAPPING_FILE = join(ROOT, 'src', 'symbols-mapping.json');
 const CHECK_FLAG = '--check';
 const SCHEMA_VERSION = 1;
 const MAX_THEME_BYTES = 16 * 1024;
@@ -242,39 +243,47 @@ function buildTerminalTheme(palette: Palette): GeneratedFile {
   };
 }
 
-function buildIconThemes(mapping: IconMapping): GeneratedFile[] {
-  const mappingCount = [mapping.icons, mapping.fileNames, mapping.fileExtensions, mapping.folderNames].reduce(
-    (total, map) => total + Object.keys(map).length,
-    0
-  );
+/**
+ * One Orca icon theme from a name map whose values are SVG basenames in `svgDir`.
+ * Why no `folder-open` slot or `folderNamesExpanded`: Orca falls back to `folderNames` for open
+ * folders only when both are absent, and both icon sets draw open and closed folders alike.
+ */
+function buildIconTheme(mapping: IconMapping, svgDir: string, outputPath: string): GeneratedFile {
+  const maps = [mapping.icons, mapping.fileNames, mapping.fileExtensions, mapping.folderNames];
+  const mappingCount = maps.reduce((total, map) => total + Object.keys(map).length, 0);
   if (mappingCount > MAX_ICON_MAPPINGS) {
-    throw new Error(`icon mapping has ${mappingCount} entries, Orca accepts at most ${MAX_ICON_MAPPINGS}`);
+    throw new Error(`${outputPath} has ${mappingCount} mappings, Orca accepts at most ${MAX_ICON_MAPPINGS}`);
   }
-  return ICON_VARIANTS.map((variant) => {
-    const toPath = (icon: string): string => {
-      const path = `icons/${variant}/${icon}.svg`;
-      if (!existsSync(join(ROOT, path))) {
-        throw new Error(`icon mapping points at missing ${path}`);
-      }
-      return path;
-    };
-    const mapValues = (map: Readonly<Record<string, string>>): Record<string, string> =>
-      Object.fromEntries(Object.entries(map).map(([name, icon]) => [name, toPath(icon)]));
-    const icons = mapValues(mapping.icons);
-    const folderNames = mapValues(mapping.folderNames);
-    return {
-      path: `icons/intellij-${variant}.json`,
-      content: serialize({
-        schemaVersion: SCHEMA_VERSION,
-        icons,
-        fileNames: mapValues(mapping.fileNames),
-        fileExtensions: mapValues(mapping.fileExtensions),
-        // Why: the New UI draws open and closed folders with the same icon.
-        folderNames,
-        folderNamesExpanded: folderNames
-      })
-    };
-  });
+  if ('folder-open' in mapping.icons) {
+    throw new Error(`${outputPath}: a folder-open slot would hide every named folder icon when expanded`);
+  }
+  const toPath = (icon: string): string => {
+    const path = `${svgDir}/${icon}.svg`;
+    if (!existsSync(join(ROOT, path))) {
+      throw new Error(`${outputPath} points at missing ${path}`);
+    }
+    return path;
+  };
+  const mapValues = (map: Readonly<Record<string, string>>): Record<string, string> =>
+    Object.fromEntries(Object.entries(map).map(([name, icon]) => [name, toPath(icon)]));
+  return {
+    path: outputPath,
+    content: serialize({
+      schemaVersion: SCHEMA_VERSION,
+      icons: mapValues(mapping.icons),
+      fileNames: mapValues(mapping.fileNames),
+      fileExtensions: mapValues(mapping.fileExtensions),
+      folderNames: mapValues(mapping.folderNames)
+    })
+  };
+}
+
+function buildIconThemes(): GeneratedFile[] {
+  const intellij = readJson<IconMapping>(ICON_MAPPING_FILE);
+  return [
+    ...ICON_VARIANTS.map((variant) => buildIconTheme(intellij, `icons/${variant}`, `icons/intellij-${variant}.json`)),
+    buildIconTheme(readJson<IconMapping>(SYMBOLS_MAPPING_FILE), 'icons/symbols', 'icons/symbols.json')
+  ];
 }
 
 /** Builds every generated file in memory, validating palettes first. */
@@ -283,7 +292,7 @@ export function generateAll(): GeneratedFile[] {
   palettes.forEach(assertPalette);
   return [
     ...palettes.flatMap((palette) => [buildAppTheme(palette), buildTerminalTheme(palette)]),
-    ...buildIconThemes(readJson<IconMapping>(ICON_MAPPING_FILE))
+    ...buildIconThemes()
   ];
 }
 

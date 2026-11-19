@@ -1,8 +1,7 @@
 {
   "icons": {
     "file": "unknown",
-    "folder": "folder",
-    "folder-open": "folder"
+    "folder": "folder"
   },
   "fileNames": {
     "dockerfile": "docker",

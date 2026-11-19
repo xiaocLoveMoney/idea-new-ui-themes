@@ -29,3 +29,10 @@ Third-party material
    Copyright 2020 The JetBrains Mono Project Authors.
    fonts/*.woff2 are unmodified copies of fonts/webfonts/.
    Licensed under the SIL Open Font License 1.1 (licenses/OFL-1.1.txt).
+
+3. Symbols by Miguel Solorio (https://github.com/miguelsolorio/vscode-symbols)
+   Commit a405d32cca082d838ad7739b6d0044dea9dbbb79
+   Copyright (c) 2020-22 Miguel Solorio.
+   icons/symbols/*.svg are unmodified copies of src/icons/{files,folders}, and
+   src/symbols-mapping.json is a subset of src/symbol-icon-theme.json.
+   Licensed under the MIT License (licenses/MIT-vscode-symbols.txt).
