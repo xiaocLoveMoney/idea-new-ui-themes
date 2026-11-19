@@ -9,7 +9,7 @@
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { isHexColor } from './color.ts';
+import { contrastRatio, isHexColor, mix, parseHex } from './color.ts';
 import { findContrastViolations, type ThemeBase } from './contrast.ts';
 import { SYNTAX_SCOPES, type SyntaxRole } from './syntax-scopes.ts';
 
@@ -21,6 +21,12 @@ const SCHEMA_VERSION = 1;
 const MAX_THEME_BYTES = 16 * 1024;
 const MAX_ICON_MAPPINGS = 512;
 const ICON_VARIANTS = ['light', 'dark'] as const;
+const CHANNEL_MAX = 255;
+/** Orca paints the dark chat canvas as `color-mix(--foreground 5%, --background)`. */
+const DARK_CHAT_CANVAS_FOREGROUND_PERCENT = 5;
+const PERCENT = 100;
+/** Orca drops a code color whose contrast with the editor background is below this. */
+const MIN_SYNTAX_CONTRAST = 3;
 const FONT_STYLE = /^(?:(?:italic|bold|underline|strikethrough)(?: (?:italic|bold|underline|strikethrough))*)?$/;
 
 /** Orca 1.4.263 public app theme tokens; any other key makes Orca refuse the theme. */
@@ -59,6 +65,12 @@ export interface Palette {
   readonly base: ThemeBase;
   readonly iconVariant: (typeof ICON_VARIANTS)[number];
   readonly tokens: Readonly<Record<string, string>>;
+  /**
+   * The color the chat area should end up painted in. The build derives `--background` from it,
+   * because Orca lifts the dark chat canvas towards the foreground; without this the chat area of
+   * a dark theme drifts into the sidebar color and the IntelliJ editor/panel step disappears.
+   */
+  readonly chatCanvas?: string;
   readonly syntax: Readonly<Partial<Record<SyntaxRole, SyntaxStyle>>>;
   readonly terminal: Readonly<Record<string, string>>;
 }
@@ -100,9 +112,49 @@ export function loadPalettes(): Palette[] {
     .map((name) => readJson<Palette>(join(PALETTE_DIR, name)));
 }
 
+function toHex(channels: readonly number[]): string {
+  return `#${channels.map((channel) => Math.round(Math.min(CHANNEL_MAX, Math.max(0, channel))).toString(16).padStart(2, '0').toUpperCase()).join('')}`;
+}
+
+/**
+ * The `--background` that makes Orca paint the chat canvas in `chatCanvas`.
+ * @throws Error when no in-gamut background produces it.
+ */
+export function backgroundForChatCanvas(base: ThemeBase, chatCanvas: string, foreground: string): string {
+  if (base === 'light') {
+    return chatCanvas;
+  }
+  const canvas = parseHex(chatCanvas);
+  const text = parseHex(foreground);
+  const weight = DARK_CHAT_CANVAS_FOREGROUND_PERCENT / PERCENT;
+  const channels = [0, 1, 2].map((index) => (canvas[index] - text[index] * weight) / (1 - weight));
+  if (channels.some((channel) => channel < 0 || channel > CHANNEL_MAX)) {
+    throw new Error(`no background paints the chat canvas as ${chatCanvas} under ${foreground}`);
+  }
+  const background = toHex(channels);
+  const painted = mix(text, parseHex(background), DARK_CHAT_CANVAS_FOREGROUND_PERCENT);
+  if (painted.slice(0, 3).some((channel, index) => Math.abs(channel - canvas[index]) > 1)) {
+    throw new Error(`chat canvas ${chatCanvas} cannot be reproduced exactly`);
+  }
+  return background;
+}
+
+/** The palette's tokens with `--background` derived from `chatCanvas` when one is given. */
+export function themeTokens(palette: Palette): Record<string, string> {
+  if (!palette.chatCanvas) {
+    return { ...palette.tokens };
+  }
+  if (palette.tokens['--background']) {
+    throw new Error(`palette ${palette.id}: set either chatCanvas or --background, not both`);
+  }
+  const background = backgroundForChatCanvas(palette.base, palette.chatCanvas, palette.tokens['--foreground']);
+  return { '--background': background, ...palette.tokens };
+}
+
 function assertPalette(palette: Palette): void {
   const problems: string[] = [];
-  for (const [token, value] of Object.entries(palette.tokens)) {
+  const tokens = themeTokens(palette);
+  for (const [token, value] of Object.entries(tokens)) {
     if (!ORCA_THEME_TOKENS.has(token)) {
       problems.push(`${token} is not an Orca theme token`);
     }
@@ -118,6 +170,11 @@ function assertPalette(palette: Palette): void {
     const fontStyle = typeof style === 'string' ? undefined : style?.fontStyle;
     if (color !== undefined && !/^#(?:[0-9a-f]{6})$/i.test(color)) {
       problems.push(`syntax ${role} must be a 6-digit hex color, got ${color}`);
+    } else if (color !== undefined) {
+      const ratio = contrastRatio(parseHex(color), parseHex(tokens['--editor-surface'] ?? tokens['--background']));
+      if (ratio < MIN_SYNTAX_CONTRAST) {
+        problems.push(`syntax ${role} ${color} is ${ratio.toFixed(2)}:1 on the editor, Orca drops it below ${MIN_SYNTAX_CONTRAST}`);
+      }
     }
     if (fontStyle !== undefined && !FONT_STYLE.test(fontStyle)) {
       problems.push(`syntax ${role} has an invalid fontStyle ${fontStyle}`);
@@ -133,7 +190,7 @@ function assertPalette(palette: Palette): void {
       problems.push(`terminal.${key}=${value} is not a known key with a 6-digit hex color`);
     }
   }
-  for (const violation of findContrastViolations(palette.base, palette.tokens)) {
+  for (const violation of findContrastViolations(palette.base, tokens)) {
     problems.push(
       `contrast ${violation.text} on ${violation.surface} is ${violation.ratio.toFixed(2)}, needs ${violation.min}`
     );
@@ -167,7 +224,7 @@ function buildAppTheme(palette: Palette): GeneratedFile {
   const content = serialize({
     schemaVersion: SCHEMA_VERSION,
     base: palette.base,
-    tokens: palette.tokens,
+    tokens: themeTokens(palette),
     tokenColors: buildTokenColors(palette)
   });
   const bytes = Buffer.byteLength(content);

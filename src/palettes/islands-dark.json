@@ -3,8 +3,8 @@
   "title": "IntelliJ Islands Dark",
   "base": "dark",
   "iconVariant": "dark",
+  "chatCanvas": "#191A1C",
   "tokens": {
-    "--background": "#191A1C",
     "--editor-surface": "#191A1C",
     "--foreground": "#D1D3D9",
     "--card": "#212326",
@@ -131,7 +131,7 @@
     "diffRange": "#7A7E85",
     "invalid": "#F75464",
     "pythonSelf": "#94558D",
-    "pythonKeywordArgument": "#AA4926",
+    "pythonKeywordArgument": "#AF4B27",
     "pythonBuiltin": "#8888C6"
   },
   "terminal": {

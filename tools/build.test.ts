@@ -2,7 +2,15 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { test } from 'node:test';
-import { generateAll, loadPalettes, ORCA_THEME_TOKENS, ROOT, staleFiles } from './build.ts';
+import {
+  backgroundForChatCanvas,
+  generateAll,
+  loadPalettes,
+  ORCA_THEME_TOKENS,
+  ROOT,
+  staleFiles,
+  themeTokens
+} from './build.ts';
 import { contrastRatio, mix, parseHex } from './color.ts';
 import { findContrastViolations } from './contrast.ts';
 
@@ -39,6 +47,14 @@ test('contrast check ignores pairs the theme does not set', () => {
   assert.deepEqual(findContrastViolations('dark', { '--background': '#1E1F22', '--foreground': '#DFE1E5' }), []);
 });
 
+test('dark chat canvas is reproduced from the derived background', () => {
+  const background = backgroundForChatCanvas('dark', '#1E1F22', '#DFE1E5');
+  const painted = mix(parseHex('#DFE1E5'), parseHex(background), 5);
+  [30, 31, 34].forEach((channel, index) => assert.ok(Math.abs(painted[index] - channel) <= 1));
+  assert.equal(backgroundForChatCanvas('light', '#FFFFFF', '#000000'), '#FFFFFF');
+  assert.throws(() => backgroundForChatCanvas('dark', '#000000', '#FFFFFF'));
+});
+
 test('there is one palette per variant', () => {
   assert.deepEqual(
     loadPalettes().map((palette) => palette.id),
@@ -48,10 +64,11 @@ test('there is one palette per variant', () => {
 
 test('palettes use public tokens and pass the core text contrast pairs', () => {
   for (const palette of loadPalettes()) {
-    for (const token of Object.keys(palette.tokens)) {
+    const tokens = themeTokens(palette);
+    for (const token of Object.keys(tokens)) {
       assert.ok(ORCA_THEME_TOKENS.has(token), `${palette.id}: ${token}`);
     }
-    const ratio = contrastRatio(parseHex(palette.tokens['--background']), parseHex(palette.tokens['--foreground']));
+    const ratio = contrastRatio(parseHex(tokens['--background']), parseHex(tokens['--foreground']));
     assert.ok(ratio >= AA_TEXT, `${palette.id}: body text contrast ${ratio}`);
   }
 });

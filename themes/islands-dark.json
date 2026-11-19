@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "base": "dark",
   "tokens": {
-    "--background": "#191A1C",
+    "--background": "#0F1012",
     "--editor-surface": "#191A1C",
     "--foreground": "#D1D3D9",
     "--card": "#212326",
@@ -437,7 +437,7 @@
         "variable.parameter.function-call.python"
       ],
       "settings": {
-        "foreground": "#AA4926"
+        "foreground": "#AF4B27"
       }
     },
     {

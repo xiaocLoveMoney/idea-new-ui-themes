@@ -3,8 +3,8 @@
   "title": "IntelliJ New UI Dark",
   "base": "dark",
   "iconVariant": "dark",
+  "chatCanvas": "#1E1F22",
   "tokens": {
-    "--background": "#1E1F22",
     "--editor-surface": "#1E1F22",
     "--foreground": "#DFE1E5",
     "--card": "#2B2D30",
@@ -87,11 +87,20 @@
     "regexp": "#42C3D4",
     "number": "#2AACB8",
     "comment": "#7A7E85",
-    "docComment": { "color": "#5F826B", "fontStyle": "italic" },
-    "docTag": { "color": "#67A37C", "fontStyle": "italic underline" },
+    "docComment": {
+      "color": "#5F826B",
+      "fontStyle": "italic"
+    },
+    "docTag": {
+      "color": "#67A37C",
+      "fontStyle": "italic underline"
+    },
     "function": "#56A8F5",
     "field": "#C77DBB",
-    "constant": { "color": "#C77DBB", "fontStyle": "italic" },
+    "constant": {
+      "color": "#C77DBB",
+      "fontStyle": "italic"
+    },
     "metadata": "#B3AE60",
     "typeParameter": "#16BAAC",
     "tag": "#D5B778",
@@ -101,10 +110,19 @@
     "cssColor": "#56A8F5",
     "link": "#56A8F5",
     "label": "#32B8AF",
-    "heading": { "color": "#BCBEC4", "fontStyle": "bold" },
-    "bold": { "fontStyle": "bold" },
-    "italic": { "fontStyle": "italic" },
-    "strikethrough": { "fontStyle": "strikethrough" },
+    "heading": {
+      "color": "#BCBEC4",
+      "fontStyle": "bold"
+    },
+    "bold": {
+      "fontStyle": "bold"
+    },
+    "italic": {
+      "fontStyle": "italic"
+    },
+    "strikethrough": {
+      "fontStyle": "strikethrough"
+    },
     "inlineCode": "#BCBEC4",
     "markdownMarker": "#7A7E85",
     "inserted": "#73BD79",
@@ -113,7 +131,7 @@
     "diffRange": "#7A7E85",
     "invalid": "#F75464",
     "pythonSelf": "#94558D",
-    "pythonKeywordArgument": "#AA4926",
+    "pythonKeywordArgument": "#AF4B27",
     "pythonBuiltin": "#8888C6"
   },
   "terminal": {
