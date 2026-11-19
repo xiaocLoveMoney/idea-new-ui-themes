@@ -1,0 +1,14 @@
+{
+  "name": "idea-new-ui-themes",
+  "private": true,
+  "type": "module",
+  "description": "Build scripts for the IntelliJ New UI Orca themes; the plugin itself has no runtime code.",
+  "scripts": {
+    "build": "node tools/build.ts",
+    "check": "node tools/build.ts --check",
+    "test": "node --test tools/*.test.ts"
+  },
+  "engines": {
+    "node": ">=22.18"
+  }
+}

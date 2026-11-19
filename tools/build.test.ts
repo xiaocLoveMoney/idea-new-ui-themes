@@ -1,0 +1,73 @@
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
+import { test } from 'node:test';
+import { generateAll, loadPalettes, ORCA_THEME_TOKENS, ROOT, staleFiles } from './build.ts';
+import { contrastRatio, mix, parseHex } from './color.ts';
+import { findContrastViolations } from './contrast.ts';
+
+const EXPECTED_VARIANTS = ['islands-dark', 'islands-light', 'new-ui-dark', 'new-ui-light'];
+const AA_TEXT = 4.5;
+
+test('parseHex reads short, long and alpha forms', () => {
+  assert.deepEqual(parseHex('#fff'), [255, 255, 255, 1]);
+  assert.deepEqual(parseHex('#1E1F22'), [30, 31, 34, 1]);
+  assert.deepEqual(parseHex('#00000080'), [0, 0, 0, 128 / 255]);
+  assert.throws(() => parseHex('rgb(0,0,0)'));
+});
+
+test('contrastRatio matches WCAG reference values', () => {
+  assert.equal(contrastRatio(parseHex('#000000'), parseHex('#FFFFFF')).toFixed(2), '21.00');
+  assert.equal(contrastRatio(parseHex('#777777'), parseHex('#FFFFFF')).toFixed(2), '4.48');
+});
+
+test('mix follows color-mix(in srgb) weighting', () => {
+  assert.deepEqual(mix(parseHex('#FFFFFF'), parseHex('#000000'), 50), [127.5, 127.5, 127.5, 1]);
+});
+
+test('contrast check flags what Orca would drop', () => {
+  const violations = findContrastViolations('dark', {
+    '--background': '#1E1F22',
+    '--foreground': '#DFE1E5',
+    '--primary': '#3574F0',
+    '--primary-foreground': '#FFFFFF'
+  });
+  assert.ok(violations.some((violation) => violation.surface === '--primary'));
+});
+
+test('contrast check ignores pairs the theme does not set', () => {
+  assert.deepEqual(findContrastViolations('dark', { '--background': '#1E1F22', '--foreground': '#DFE1E5' }), []);
+});
+
+test('there is one palette per variant', () => {
+  assert.deepEqual(
+    loadPalettes().map((palette) => palette.id),
+    EXPECTED_VARIANTS
+  );
+});
+
+test('palettes use public tokens and pass the core text contrast pairs', () => {
+  for (const palette of loadPalettes()) {
+    for (const token of Object.keys(palette.tokens)) {
+      assert.ok(ORCA_THEME_TOKENS.has(token), `${palette.id}: ${token}`);
+    }
+    const ratio = contrastRatio(parseHex(palette.tokens['--background']), parseHex(palette.tokens['--foreground']));
+    assert.ok(ratio >= AA_TEXT, `${palette.id}: body text contrast ${ratio}`);
+  }
+});
+
+test('generated files are committed and up to date', () => {
+  assert.deepEqual(staleFiles(generateAll()), []);
+});
+
+test('manifest lists every generated theme file', () => {
+  const manifest = JSON.parse(readFileSync(join(ROOT, 'orca-plugin.json'), 'utf8'));
+  const listed = new Set(
+    ['themes', 'terminalThemes', 'iconThemes'].flatMap((kind) =>
+      manifest.contributes[kind].map((entry: { path: string }) => entry.path)
+    )
+  );
+  for (const file of generateAll()) {
+    assert.ok(listed.has(file.path), `${file.path} is not in orca-plugin.json`);
+  }
+});

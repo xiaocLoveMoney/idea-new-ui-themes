@@ -1,0 +1,31 @@
+IntelliJ New UI Themes for Orca
+===============================
+
+This plugin is an unofficial port. It is not affiliated with or endorsed by
+JetBrains s.r.o. IntelliJ IDEA and JetBrains Mono are trademarks of JetBrains s.r.o.
+
+Third-party material
+--------------------
+
+1. IntelliJ Community (https://github.com/JetBrains/intellij-community)
+   Commit 9c2d0eb22c6923b918daefea79e98827a74a24e0
+   Copyright 2000-2026 JetBrains s.r.o. and contributors.
+   Licensed under the Apache License 2.0 (licenses/Apache-2.0.txt).
+
+   - icons/light/*.svg and icons/dark/*.svg are unmodified copies of the New UI
+     ("expui") icons, from platform/icons/src/expui/{fileTypes,nodes,language},
+     plugins/kotlin/.../icons/expui and python/python-parser/.../parser/expui.
+   - The colors in src/palettes/ (and so in themes/ and terminal/) are taken from
+     platform/platform-resources/src/themes/expUI/*.theme.json,
+     expUI_darkScheme.xml, expUI_lightScheme.xml,
+     islands/ManyIslands{Dark,Light}.theme.json, islands/IslandSchemeDark.xml
+     and platform/platform-resources/src/DefaultColorSchemesManager.xml.
+
+   "This software includes code from IntelliJ IDEA
+    Copyright (C) JetBrains s.r.o.
+    https://www.jetbrains.com/idea/"
+
+2. JetBrains Mono v2.304 (https://github.com/JetBrains/JetBrainsMono)
+   Copyright 2020 The JetBrains Mono Project Authors.
+   fonts/*.woff2 are unmodified copies of fonts/webfonts/.
+   Licensed under the SIL Open Font License 1.1 (licenses/OFL-1.1.txt).
