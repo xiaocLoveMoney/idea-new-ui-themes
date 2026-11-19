@@ -35,11 +35,11 @@ Then pick, in Settings → Appearance:
 
 Requires Orca 1.4.253 or newer.
 
-## Optional: Orca's Dock icon
+## Optional: Orca's app icon
 
-`assets/orca-app-icon.icns` is the plugin icon on the macOS icon grid. A plugin cannot change
-Orca's own app icon, but you can: select Orca in Finder → Get Info, drag the `.icns` onto the
-icon at the top left, then relaunch Orca. Delete it there to go back. Orca updates may reset it.
+`assets/orca-app-icon.png` is the plugin icon on the macOS icon grid. A plugin cannot set Orca's
+app icon, but Orca can: Settings → Appearance → App icon → Customize…, then pick that file.
+(`assets/orca-app-icon.icns` is the same icon for Finder's Get Info, if you prefer.)
 
 ## Icon coverage
 
