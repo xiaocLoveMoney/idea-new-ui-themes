@@ -35,6 +35,12 @@ Then pick, in Settings → Appearance:
 
 Requires Orca 1.4.253 or newer.
 
+## Optional: Orca's Dock icon
+
+`assets/orca-app-icon.icns` is the plugin icon on the macOS icon grid. A plugin cannot change
+Orca's own app icon, but you can: select Orca in Finder → Get Info, drag the `.icns` onto the
+icon at the top left, then relaunch Orca. Delete it there to go back. Orca updates may reset it.
+
 ## Icon coverage
 
 Only icons that are open source in IntelliJ Community are included: Java, Kotlin, Groovy,
