@@ -45,7 +45,7 @@ icon ships only in commercial IDEs (Go, Rust, Ruby…) show the generic file ico
 
 ## Develop
 
-The plugin icon is drawn by hand in `assets/icon.svg`; `assets/icon.png` is its 512×512 render.
+The plugin icon is drawn by hand in `assets/icon.svg`, in the style of JetBrains product icons but with its own "UI" code and colors (it is not the IntelliJ IDEA logo); `assets/icon.png` is its 512×512 render.
 
 The theme files under `themes/`, `terminal/` and `icons/*.json` are generated; edit `src/` instead.
 
