@@ -5,7 +5,8 @@
  *   node tools/import-symbols.ts <checkout>
  *
  * Writes src/symbols-mapping.json and copies the referenced SVGs into icons/symbols/. Then run
- * `node tools/build.ts` to produce icons/symbols.json.
+ * `node tools/tighten-icons.ts icons/symbols` (crops Symbols' padding so icons fill Orca's slot)
+ * and `node tools/build.ts` to produce icons/symbols.json.
  *
  * Why a subset: Orca accepts at most 512 name mappings per icon theme, and Symbols ships over
  * 1,400. The priority lists below keep the names people meet most often.

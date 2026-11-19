@@ -53,7 +53,9 @@ embedded images) are skipped. To refresh from upstream:
 
 ```sh
 git clone --depth 1 https://github.com/miguelsolorio/vscode-symbols.git /tmp/vscode-symbols
-node tools/import-symbols.ts /tmp/vscode-symbols && npm run build
+node tools/import-symbols.ts /tmp/vscode-symbols
+node tools/tighten-icons.ts icons/symbols   # crop padding so icons fill the slot; needs Chrome
+npm run build
 ```
 
 ## Develop

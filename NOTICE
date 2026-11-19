@@ -33,6 +33,7 @@ Third-party material
 3. Symbols by Miguel Solorio (https://github.com/miguelsolorio/vscode-symbols)
    Commit a405d32cca082d838ad7739b6d0044dea9dbbb79
    Copyright (c) 2020-22 Miguel Solorio.
-   icons/symbols/*.svg are unmodified copies of src/icons/{files,folders}, and
+   icons/symbols/*.svg are copies of src/icons/{files,folders} with only the root
+   viewBox, width and height changed (cropped to the drawing), and
    src/symbols-mapping.json is a subset of src/symbol-icon-theme.json.
    Licensed under the MIT License (licenses/MIT-vscode-symbols.txt).

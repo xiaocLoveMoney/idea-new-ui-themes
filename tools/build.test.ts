@@ -13,6 +13,7 @@ import {
 } from './build.ts';
 import { contrastRatio, mix, parseHex } from './color.ts';
 import { findContrastViolations } from './contrast.ts';
+import { squareViewBox, withViewBox } from './tighten-icons.ts';
 
 const EXPECTED_VARIANTS = ['islands-dark', 'islands-light', 'new-ui-dark', 'new-ui-light'];
 const AA_TEXT = 4.5;
@@ -87,4 +88,13 @@ test('manifest lists every generated theme file', () => {
   for (const file of generateAll()) {
     assert.ok(listed.has(file.path), `${file.path} is not in orca-plugin.json`);
   }
+});
+
+test('tighten-icons squares the drawing box and rewrites only the root viewBox', () => {
+  assert.equal(squareViewBox(3, 7, 21, 17), '2.28 2.28 19.44 19.44');
+  const svg = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><svg viewBox="0 0 1 1"></svg></svg>';
+  assert.equal(
+    withViewBox(svg, '1 1 22 22'),
+    '<svg width="24" height="24" viewBox="1 1 22 22" fill="none"><svg viewBox="0 0 1 1"></svg></svg>'
+  );
 });
