@@ -15,7 +15,7 @@ import { pathToFileURL } from 'node:url';
 
 const DEFAULT_CHROME = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 /** Breathing room around the drawing, as a fraction of its larger side. */
-const PADDING_RATIO = 0.04;
+const PADDING_RATIO = 0.01;
 const DECIMALS = 2;
 /** Kept on the root element so renderers that size by intrinsic dimensions still see a square. */
 const INTRINSIC_SIZE = 24;

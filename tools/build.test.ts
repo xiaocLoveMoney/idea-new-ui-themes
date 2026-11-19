@@ -91,7 +91,7 @@ test('manifest lists every generated theme file', () => {
 });
 
 test('tighten-icons squares the drawing box and rewrites only the root viewBox', () => {
-  assert.equal(squareViewBox(3, 7, 21, 17), '2.28 2.28 19.44 19.44');
+  assert.equal(squareViewBox(3, 7, 21, 17), '2.82 2.82 18.36 18.36');
   const svg = '<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><svg viewBox="0 0 1 1"></svg></svg>';
   assert.equal(
     withViewBox(svg, '1 1 22 22'),
